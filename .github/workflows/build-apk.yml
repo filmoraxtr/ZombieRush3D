@@ -1,0 +1,35 @@
+name: Build APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodu indir
+        uses: actions/checkout@v4
+
+      - name: ZIP dosyasını aç
+        run: unzip ZombieRush3D_Android_Project_v1_0_CLEAN_STARTER.zip
+
+      - name: Java kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Gradle kur
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: APK oluştur
+        run: |
+          cd ZombieRush3D_Android_Project_v1_0_CLEAN_STARTER
+          gradle assembleDebug
+
+      - name: APK dosyasını yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZombieRush3D-v1-0-CLEAN-STARTER-debug-apk
+          path: ZombieRush3D_Android_Project_v1_0_CLEAN_STARTER/app/build/outputs/apk/debug/*.apk
